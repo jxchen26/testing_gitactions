@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "test": "node run_all.js"
+  },
+  "dependencies": {
+    "zod": "^4.6.5"
+  }
+}
