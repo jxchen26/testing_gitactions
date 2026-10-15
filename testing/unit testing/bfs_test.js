@@ -155,25 +155,29 @@ let adjacency_graph = {
 	}
 
 
+var adjacencyGraph2 = {}
+
+
 var canvasX = 0
 var canvasY = 0
 var canvasW = 800
 var canvasH = 600
 var CELLSIZE = 20
 var MAZE = new Maze(0,0,800,600,"white", 20)
-
-var maze_sol1 = {0: null, 1: 0, 2: 1, 3: 2, 4: 3, 44: 4, 81: 121, 82: 81, 84: 44, 121: 161, 124: 84, 161: 162, 162: 163, 163: 164, 164: 124}
-
+var tests = 0
 
 
-result = BFS_path(adjacency_graph, [0, 0], 82, maze = MAZE);
-var visited = result[0]
-var frames = result[1]
-var singleFrame = result[1][0]
-console.log(singleFrame)
 // test 1 : test if BFS return correct traversal by comparing visited neighbors
 try {
-	assert.deepEqual(visited, maze_sol1); //(BFS output, value to test)
+	var maze_sol1 = {0: null, 1: 0, 2: 1, 3: 2, 4: 3, 44: 4, 81: 121, 82: 81, 84: 44, 121: 161, 124: 84, 161: 162, 162: 163, 163: 164, 164: 124}
+
+	result = BFS_path(adjacency_graph, [0, 0], 82, maze = MAZE);
+	var visited = result[0]
+	var frames = result[1]
+	var singleFrame = result[1][0]
+	console.log(singleFrame)
+
+	assert.deepEqual(visited, maze_sol1); 
 	console.log("passed test 1")
 }catch(err){
 	if (err.code === 'ERR_ASSERTION'){
@@ -197,12 +201,93 @@ try {
 
 var z = require("zod")
 
-//define schema 
-const itemSchema = z.array(z.string());
+try{
+
+	//define schema 
+	const frameSchema = z.object({
+		"searched": z.array(z.number()),
+		"md": z.array( z.union([ z.number(), z.nan() ]))		
+	})
+	
+	var result = frameSchema.safeParse(singleFrame)
+
+	assert.equal(result.success, true)
+	console.log("passed test 2")
+}catch(err){
+	if (err.code === 'ERR_ASSERTION'){
+		console.log("failed test2: data validation")
+		console.log("-------------")
+		console.log("what you got:",err.actual)
+		console.log("expected:",err.expected)
+		console.log("frame:", singleFrame)
+	}else{
+		 console.log("Error while doing data validation testing BFS()")
+	}
+}
 
 
-var result = itemSchema.safeParse(['a','b','c'])
-var result2 = itemSchema.safeParse([1,'b','c'])
+try{
+// test 3 : test if BFS return correct traversal by comparing visited neighbors
+	var maze_sol1 = {0: null, 1: 0, 2: 1, 3: 2, 4: 3, 44: 4, 81: 121, 82: 81, 84: 44, 121: 161, 124: 84, 161: 162, 162: 163, 163: 164, 164: 124}
 
-console.log(result)
-//sample data to test 
+	result = BFS_path(adjacencyGraph2, [0, 0], 82, maze = MAZE);
+	var visited = result[0]
+	var frames = result[1]
+	assert.deepEqual(visited, [] ); 
+	assert.deepEqual(frames, [] ); 
+	console.log("passed test 3")
+}catch(err){
+	if (err.code === 'ERR_ASSERTION'){
+		console.log("failed test3: empty graph")
+		console.log("-------------")
+		console.log("what you got:",err.actual)
+		console.log("expected:",err.expected)
+	}else{
+		 console.log("Error while doing test 3 for BFS()")
+	}
+}
+
+
+try{
+// test 4 : test if BFS return empty arrays if theres no MAZE object
+	var maze_sol1 = {0: null, 1: 0, 2: 1, 3: 2, 4: 3, 44: 4, 81: 121, 82: 81, 84: 44, 121: 161, 124: 84, 161: 162, 162: 163, 163: 164, 164: 124}
+
+	result = BFS_path(adjacencyGraph2, [0, 0], 82, maze = 123);
+	var visited = result[0]
+	var frames = result[1]
+	assert.deepEqual(visited, [] ); 
+	assert.deepEqual(frames, [] ); 
+	console.log("passed test 4")
+}catch(err){
+	if (err.code === 'ERR_ASSERTION'){
+		console.log("failed test4: empty Maze Object")
+		console.log("-------------")
+		console.log("what you got:",err.actual)
+		console.log("expected:",err.expected)
+	}else{
+		 console.log("Error while doing test 4 for BFS()")
+	}
+}
+
+
+
+try{
+// test 5 : test if BFS return empty arrays if theres no MAZE object
+	var maze_sol1 = {0: null, 1: 0, 2: 1, 3: 2, 4: 3, 44: 4, 81: 121, 82: 81, 84: 44, 121: 161, 124: 84, 161: 162, 162: 163, 163: 164, 164: 124}
+
+	result = BFS_path(adjacency_graph , null, null, maze = null);
+	var visited = result[0]
+	var frames = result[1]
+	assert.deepEqual(visited, [] ); 
+	assert.deepEqual(frames, [] ); 
+	console.log("passed test 5")
+}catch(err){
+	if (err.code === 'ERR_ASSERTION'){
+		console.log("failed test 5: empty Maze Object")
+		console.log("-------------")
+		console.log("what you got:",err.actual)
+		console.log("expected:",err.expected)
+	}else{
+		 console.log("Error while doing test 5 for BFS()")
+	}
+}

@@ -8,15 +8,36 @@ function BFS_path(adjacency_list, start_list, target, maze = MAZE){
  *
  * start_list: [ cost, id ]
  *
- * end : integers = 25
+ * target : integers = 25, can be null or any value ( maze will still be traversed)
  *
  * adjaceny_list  ={
  *  0 : [1 , 47],
  *  1 : [2,0,48]
- * 
  * }
+ *
+ * 
+ * 
  * 
  */
+
+	if (adjacency_list === null){
+		return [[],[]]
+	}
+	
+	
+	if (adjacency_list !== null && adjacency_list.constructor === Object && Object.keys(adjacency_list).length === 0){
+		return [ [], [] ]
+	}
+	
+	if ( !Array.isArray(start_list) || start_list.length != 2){
+		return [ [], [] ]
+	}
+
+	if (!(maze instanceof Maze)){
+		return [[],[]]
+	}
+
+	
 	var start = parseInt(start_list[1])
 	var distance = 0
 	var queue = [[start]]
@@ -62,6 +83,8 @@ function BFS_path(adjacency_list, start_list, target, maze = MAZE){
 	}
 	return [visited, animation_frames]
 }
+
+
 
 if (typeof module !== 'undefined' && module.exports) {
 	module.exports = BFS_path;
